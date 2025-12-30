@@ -1,0 +1,7 @@
+{
+  "name": "BankMaint AI - Maintenance Management System",
+  "description": "A comprehensive system for managing banking maintenance contracts, regional interventions, and equipment tracking with AI-powered reporting and manager insights.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
