@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { UserSession, UserRole, Banque, Agence, Contrat, Equipement, Utilisateur, Tournee, Mission, SousMission, FormTemplate, FormField, FormResponse, MarqueModele, Intervention, GeoRegion, SousRegion, Gouvernorat, VilleGeo, Municipalite, Marque, MachineType, MachineModel, Region } from './types';
-import { MOCK_BANQUES, MOCK_AGENCES, MOCK_TOURNEES, MOCK_MISSIONS, MOCK_SUBMISSIONS, MOCK_FORM_TEMPLATES, MOCK_FORM_FIELDS, MOCK_EQUIPEMENTS, MOCK_CONTRATS } from './constants';
+import { MOCK_BANQUES, MOCK_AGENCES, MOCK_TOURNEES, MOCK_MISSIONS, MOCK_SUBMISSIONS, MOCK_FORM_TEMPLATES, MOCK_FORM_FIELDS, MOCK_EQUIPEMENTS, MOCK_CONTRATS, REAL_GEO_REGIONS, REAL_SOUS_REGIONS, REAL_GOUVERNORATS, REAL_VILLES } from './constants';
 import Dashboard from './components/Dashboard';
 import AgentView from './components/AgentView';
 import BackOffice from './components/BackOffice';
@@ -36,18 +36,11 @@ const App: React.FC = () => {
   const [formTemplates, setFormTemplates] = useState<FormTemplate[]>(MOCK_FORM_TEMPLATES);
   const [formFields] = useState<FormField[]>(MOCK_FORM_FIELDS);
 
-  // Hiérarchie Adresses
-  const [geoRegions, setGeoRegions] = useState<GeoRegion[]>([
-    { region_id: 'reg1', nom: 'Grand Tunis' },
-    { region_id: 'reg2', nom: 'Nord-Est' },
-    { region_id: 'reg3', nom: 'Nord-Ouest' },
-    { region_id: 'reg4', nom: 'Centre' },
-    { region_id: 'reg5', nom: 'Sahel' },
-    { region_id: 'reg6', nom: 'Sud' }
-  ]);
-  const [sousRegions, setSousRegions] = useState<SousRegion[]>([]);
-  const [gouvernorats, setGouvernorats] = useState<Gouvernorat[]>([]);
-  const [villesGeo, setVillesGeo] = useState<VilleGeo[]>([]);
+  // Hiérarchie Adresses RÉELLE
+  const [geoRegions, setGeoRegions] = useState<GeoRegion[]>(REAL_GEO_REGIONS);
+  const [sousRegions, setSousRegions] = useState<SousRegion[]>(REAL_SOUS_REGIONS);
+  const [gouvernorats, setGouvernorats] = useState<Gouvernorat[]>(REAL_GOUVERNORATS);
+  const [villesGeo, setVillesGeo] = useState<VilleGeo[]>(REAL_VILLES);
   const [municipalites, setMunicipalites] = useState<Municipalite[]>([]);
 
   const [marques, setMarques] = useState<Marque[]>([
@@ -70,6 +63,14 @@ const App: React.FC = () => {
     if (session.role === 'CLIENT') return ['CLIENT'];
     return CURRENT_USER.roles;
   }, [session]);
+
+  const handleUpdateSubMission = (updatedSm: SousMission) => {
+    setSubMissions(prev => prev.map(sm => sm.sub_mission_id === updatedSm.sub_mission_id ? updatedSm : sm));
+  };
+
+  const handleUpdateMissionStatus = (mId: string, status: Mission['statut']) => {
+    setMissions(prev => prev.map(m => m.mission_id === mId ? { ...m, statut: status } : m));
+  };
 
   if (!session) {
     return (
@@ -127,8 +128,20 @@ const App: React.FC = () => {
             />
           </div>
         )}
-        {activeSpace === UserRole.Coordinateur && <Dashboard data={{ agences, contrats, utilisateurs, tournees, equipements, banques, missions }} />}
-        {activeSpace === UserRole.Technicien && <AgentView userId={session.userId!} data={{ tournees, missions, subMissions, agences, equipements, formTemplates, formFields, banques }} onUpdateSubMission={()=>{}} onUpdateMissionStatus={()=>{}} />}
+        {activeSpace === UserRole.Coordinateur && (
+          <Dashboard 
+            data={{ agences, contrats, utilisateurs, tournees, equipements, banques, missions, subMissions }} 
+            setters={{ setTournees, setMissions, setSubMissions }}
+          />
+        )}
+        {activeSpace === UserRole.Technicien && (
+          <AgentView 
+            userId={session.userId!} 
+            data={{ tournees, missions, subMissions, agences, equipements, formTemplates, formFields, banques }} 
+            onUpdateSubMission={handleUpdateSubMission} 
+            onUpdateMissionStatus={handleUpdateMissionStatus} 
+          />
+        )}
         {activeSpace === 'CLIENT' && <ClientPortal bankId={session.bankId!} data={{ banques, agences, equipements, interventions, utilisateurs }} />}
       </main>
     </div>

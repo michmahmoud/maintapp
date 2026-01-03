@@ -1,5 +1,5 @@
 
-import { Banque, Agence, Region, Tournee, Mission, SousMission, FormTemplate, FormField, Contrat, Equipement, AuditLog, Frequence, InterventionStatus } from './types';
+import { Banque, Agence, Region, Tournee, Mission, SousMission, FormTemplate, FormField, Contrat, Equipement, AuditLog, Frequence, InterventionStatus, GeoRegion, SousRegion, Gouvernorat, VilleGeo } from './types';
 
 export const MOCK_BANQUES: Banque[] = [
   { 
@@ -20,47 +20,81 @@ export const MOCK_BANQUES: Banque[] = [
   }
 ];
 
-const VILLES_REF = [
-  { name: 'Tunis Médina', g: 'Tunis', r: Region.GrandTunis }, { name: 'La Marsa', g: 'Tunis', r: Region.GrandTunis },
-  { name: 'Ariana Ville', g: 'Ariana', r: Region.GrandTunis }, { name: 'Raoued', g: 'Ariana', r: Region.GrandTunis },
-  { name: 'Ben Arous Ville', g: 'Ben Arous', r: Region.GrandTunis }, { name: 'Megrine', g: 'Ben Arous', r: Region.GrandTunis },
-  { name: 'Manouba Ville', g: 'Manouba', r: Region.GrandTunis },
-  { name: 'Nabeul Ville', g: 'Nabeul', r: Region.NordEst }, { name: 'Hammamet', g: 'Nabeul', r: Region.NordEst },
-  { name: 'Bizerte Ville', g: 'Bizerte', r: Region.NordEst }, { name: 'Ras Jebel', g: 'Bizerte', r: Region.NordEst },
-  { name: 'Sousse Ville', g: 'Sousse', r: Region.Sahel }, { name: 'Hammam Sousse', g: 'Sousse', r: Region.Sahel },
-  { name: 'Monastir Ville', g: 'Monastir', r: Region.Sahel }, { name: 'Sahline', g: 'Monastir', r: Region.Sahel },
-  { name: 'Mahdia Ville', g: 'Mahdia', r: Region.Sahel }, { name: 'Chebba', g: 'Mahdia', r: Region.Sahel },
-  { name: 'Sfax Ville', g: 'Sfax', r: Region.Sud }, { name: 'Sakiet Ezzit', g: 'Sfax', r: Region.Sud },
-  { name: 'Kairouan Ville', g: 'Kairouan', r: Region.Centre }, { name: 'Sbikha', g: 'Kairouan', r: Region.Centre },
-  { name: 'Gabès Ville', g: 'Gabès', r: Region.Sud }, { name: 'Metouia', g: 'Gabès', r: Region.Sud },
-  { name: 'Djerba Houmt Souk', g: 'Medenine', r: Region.Sud }, { name: 'Zarzis', g: 'Medenine', r: Region.Sud },
-  { name: 'Gafsa Ville', g: 'Gafsa', r: Region.Sud }, { name: 'Metlaoui', g: 'Gafsa', r: Region.Sud },
-  { name: 'Béja Ville', g: 'Béja', r: Region.NordOuest }, { name: 'Medjez El Bab', g: 'Béja', r: Region.NordOuest },
-  { name: 'Jendouba Ville', g: 'Jendouba', r: Region.NordOuest }, { name: 'Tabarka', g: 'Jendouba', r: Region.NordOuest },
-  { name: 'Le Kef Ville', g: 'Le Kef', r: Region.NordOuest }, { name: 'Siliana Ville', g: 'Siliana', r: Region.NordOuest },
-  { name: 'Zaghouan Ville', g: 'Zaghouan', r: Region.NordEst }, { name: 'Kasserine Ville', g: 'Kasserine', r: Region.Centre },
-  { name: 'Sidi Bouzid Ville', g: 'Sidi Bouzid', r: Region.Centre }, { name: 'Tataouine Ville', g: 'Tataouine', r: Region.Sud },
-  { name: 'Kebili Ville', g: 'Kebili', r: Region.Sud }, { name: 'Tozeur Ville', g: 'Tozeur', r: Region.Sud },
-  { name: 'El Hamma', g: 'Gabès', r: Region.Sud }
+// RÉFÉRENTIEL GÉOGRAPHIQUE RÉEL TUNISIE
+export const REAL_GEO_REGIONS: GeoRegion[] = [
+  { region_id: 'reg-gt', nom: 'Grand Tunis' },
+  { region_id: 'reg-ne', nom: 'Nord-Est' },
+  { region_id: 'reg-no', nom: 'Nord-Ouest' },
+  { region_id: 'reg-sa', nom: 'Sahel' },
+  { region_id: 'reg-ce', nom: 'Centre' },
+  { region_id: 'reg-su', nom: 'Sud' }
+];
+
+export const REAL_SOUS_REGIONS: SousRegion[] = [
+  { sous_region_id: 'sr-gt', region_id: 'reg-gt', nom: 'Zone Tunis' },
+  { sous_region_id: 'sr-ne', region_id: 'reg-ne', nom: 'Zone Cap Bon' },
+  { sous_region_id: 'sr-no', region_id: 'reg-no', nom: 'Zone Montagne' },
+  { sous_region_id: 'sr-sa', region_id: 'reg-sa', nom: 'Zone Littoral' },
+  { sous_region_id: 'sr-ce', region_id: 'reg-ce', nom: 'Zone Steppe' },
+  { sous_region_id: 'sr-su', region_id: 'reg-su', nom: 'Zone Désert' }
+];
+
+export const REAL_GOUVERNORATS: Gouvernorat[] = [
+  { gouvernorat_id: 'gv-tunis', sous_region_id: 'sr-gt', nom: 'Tunis' },
+  { gouvernorat_id: 'gv-ariana', sous_region_id: 'sr-gt', nom: 'Ariana' },
+  { gouvernorat_id: 'gv-ben-arous', sous_region_id: 'sr-gt', nom: 'Ben Arous' },
+  { gouvernorat_id: 'gv-manouba', sous_region_id: 'sr-gt', nom: 'Manouba' },
+  { gouvernorat_id: 'gv-nabeul', sous_region_id: 'sr-ne', nom: 'Nabeul' },
+  { gouvernorat_id: 'gv-bizerte', sous_region_id: 'sr-ne', nom: 'Bizerte' },
+  { gouvernorat_id: 'gv-beja', sous_region_id: 'sr-no', nom: 'Béja' },
+  { gouvernorat_id: 'gv-jendouba', sous_region_id: 'sr-no', nom: 'Jendouba' },
+  { gouvernorat_id: 'gv-sousse', sous_region_id: 'sr-sa', nom: 'Sousse' },
+  { gouvernorat_id: 'gv-monastir', sous_region_id: 'sr-sa', nom: 'Monastir' },
+  { gouvernorat_id: 'gv-mahdia', sous_region_id: 'sr-sa', nom: 'Mahdia' },
+  { gouvernorat_id: 'gv-sfax', sous_region_id: 'sr-su', nom: 'Sfax' },
+  { gouvernorat_id: 'gv-gabes', sous_region_id: 'sr-su', nom: 'Gabès' },
+  { gouvernorat_id: 'gv-gafsa', sous_region_id: 'sr-su', nom: 'Gafsa' }
+];
+
+export const REAL_VILLES: VilleGeo[] = [
+  { ville_id: 'v-tunis-medina', gouvernorat_id: 'gv-tunis', nom: 'Tunis Médina' },
+  { ville_id: 'v-marsa', gouvernorat_id: 'gv-tunis', nom: 'La Marsa' },
+  { ville_id: 'v-goulette', gouvernorat_id: 'gv-tunis', nom: 'La Goulette' },
+  { ville_id: 'v-lac', gouvernorat_id: 'gv-tunis', nom: 'Les Berges du Lac' },
+  { ville_id: 'v-ariana-v', gouvernorat_id: 'gv-ariana', nom: 'Ariana Ville' },
+  { ville_id: 'v-mnihla', gouvernorat_id: 'gv-ariana', nom: 'Mnihla' },
+  { ville_id: 'v-e-zahra', gouvernorat_id: 'gv-ben-arous', nom: 'Ezzahra' },
+  { ville_id: 'v-hammamet', gouvernorat_id: 'gv-nabeul', nom: 'Hammamet' },
+  { ville_id: 'v-nabeul-v', gouvernorat_id: 'gv-nabeul', nom: 'Nabeul Ville' },
+  { ville_id: 'v-bizerte-v', gouvernorat_id: 'gv-bizerte', nom: 'Bizerte Ville' },
+  { ville_id: 'v-sousse-v', gouvernorat_id: 'gv-sousse', nom: 'Sousse Ville' },
+  { ville_id: 'v-kantaoui', gouvernorat_id: 'gv-sousse', nom: 'Port El Kantaoui' },
+  { ville_id: 'v-monastir-v', gouvernorat_id: 'gv-monastir', nom: 'Monastir Ville' },
+  { ville_id: 'v-sfax-v', gouvernorat_id: 'gv-sfax', nom: 'Sfax Ville' }
 ];
 
 const generateAgencies = (): Agence[] => {
   const ags: Agence[] = [];
   MOCK_BANQUES.forEach((bank, bIdx) => {
     for (let i = 0; i < 10; i++) {
-      const cityRef = VILLES_REF[(bIdx * 10 + i) % VILLES_REF.length];
+      const cityRef = REAL_VILLES[(bIdx * 5 + i) % REAL_VILLES.length];
+      const gouvRef = REAL_GOUVERNORATS.find(g => g.gouvernorat_id === cityRef.gouvernorat_id);
+      const srRef = REAL_SOUS_REGIONS.find(sr => sr.sous_region_id === gouvRef?.sous_region_id);
+      const regRef = REAL_GEO_REGIONS.find(r => r.region_id === srRef?.region_id);
+      
       const id = `ag-${bank.id}-${i + 1}`;
       ags.push({
         id,
         agenceid: id,
         banque_id: bank.id,
-        nom_agence: `${bank.nom} Agence ${cityRef.name}`,
-        adresse: `Boulevard de l'Indépendance, ${cityRef.name}`,
-        region: cityRef.r,
-        ville: cityRef.name,
+        // Fix: Removed reference to cityRef.name which does not exist on VilleGeo, used cityRef.nom instead.
+        nom_agence: `${bank.nom} Agence ${cityRef.nom}`,
+        adresse: `Boulevard de l'Indépendance, ${cityRef.nom}`,
+        region: (regRef?.nom as Region) || Region.GrandTunis,
+        ville: cityRef.nom,
         code_agence: `AG${bank.id.toUpperCase()}${(i+1).toString().padStart(3, '0')}`,
         contacts: [],
-        nom_responsable: `Responsable ${cityRef.name}`,
+        nom_responsable: `Responsable ${cityRef.nom}`,
         tel_responsable: `71 ${(Math.floor(Math.random() * 900) + 100).toString()} ${(Math.floor(Math.random() * 900) + 100).toString()}`,
         latitude: 36.0 + (Math.random() * 4 - 2),
         longitude: 9.0 + (Math.random() * 2 - 1)
@@ -168,5 +202,5 @@ export const MOCK_SUBMISSIONS: SousMission[] = [
 ];
 
 export const MOCK_LOGS: AuditLog[] = [
-  { id: "l1", timestamp: new Date().toISOString(), action: "Initialisation", details: "Système chargé avec 4 banques, 40 agences et 80 équipements (Référentiel Tunisie)." }
+  { id: "l1", timestamp: new Date().toISOString(), action: "Initialisation", details: "Système chargé avec le référentiel réel de la Tunisie." }
 ];
